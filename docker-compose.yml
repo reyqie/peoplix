@@ -1,0 +1,54 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        ports:
+            - "3007:80"
+        environment:
+            APP_NAME: Peoplix
+            APP_KEY: ${APP_KEY}
+            APP_ENV: ${APP_ENV:-production}
+            APP_URL: http://localhost:3007
+            DB_CONNECTION: mysql
+            DB_HOST: db
+            DB_PORT: "3306"
+            DB_DATABASE: ${DB_DATABASE:-peoplix}
+            DB_USERNAME: ${DB_USERNAME:-peoplix}
+            DB_PASSWORD: ${DB_PASSWORD:-peoplix}
+        depends_on:
+            db:
+                condition: service_healthy
+
+    db:
+        image: mysql:8.4
+        restart: unless-stopped
+        ports:
+            - "3009:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-peoplix}
+            MYSQL_USER: ${DB_USERNAME:-peoplix}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-peoplix}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+        volumes:
+            - db-data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+            interval: 5s
+            retries: 10
+
+    phpmyadmin:
+        image: phpmyadmin:latest
+        restart: unless-stopped
+        ports:
+            - "3008:80"
+        environment:
+            PMA_HOST: db
+            PMA_PORT: "3306"
+            UPLOAD_LIMIT: 100M
+        depends_on:
+            - db
+
+volumes:
+    db-data:
