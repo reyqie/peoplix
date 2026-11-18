@@ -83,26 +83,6 @@ export default function Sidebar({
                     label="Settings"
                     icon={IconSettings}
                 />
-                <div className="mt-4 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-4 text-white shadow-xl shadow-violet-600/20">
-                    <p className="flex items-center gap-2 text-sm font-semibold">
-                        <IconBriefcase className="size-4" /> Peoplix Pro
-                    </p>
-                    <p className="mt-1 text-[11px] leading-relaxed text-violet-100">
-                        Unlock advanced analytics and unlimited seats.
-                    </p>
-                    <button
-                        onClick={() =>
-                            toast.push({
-                                title: "Upgrade started",
-                                message: "Redirecting to billing…",
-                                variant: "info",
-                            })
-                        }
-                        className="mt-3 w-full rounded-lg bg-white/15 py-2 text-xs font-semibold backdrop-blur transition hover:bg-white/25"
-                    >
-                        Upgrade plan
-                    </button>
-                </div>
             </div>
         </aside>
     );
